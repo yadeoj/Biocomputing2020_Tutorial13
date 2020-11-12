@@ -1,0 +1,65 @@
+#Exercise 11 Script
+#By Joseph Day
+
+#Setting up the parameters
+
+k <- 1000000
+r_norm <- .1
+r_mutated_drug <- .05
+r_not_mutated_drug <- -.1
+
+#The starting population is 99 unmutated cells and 1 mutated cell
+
+N <- c(99)
+M <- c(1)
+
+#Creating a loop
+
+i <- 2
+
+while(TRUE){
+  
+  #Checking if the populations have gotten to capacity. Using K-5 because of rounding
+  
+  if(M[i-1] + N[i-1] > k-5) {
+    
+    print("Drug treatment occurs at day:")
+    print(i-1)
+    
+    day <- i-1
+    
+    while(TRUE){
+    
+    #If they have, it's the same process, Just trying to get to an equilibrium point with a lot of iterations
+      
+    if(i == 700) {break}
+    
+    N[i] <- N[i-1] + r_not_mutated_drug*N[i-1]*(1-((N[i-1] + M[i-1])/k))
+    M[i] <- M[i-1] + r_mutated_drug*M[i-1]*(1-((N[i-1] + M[i-1])/k))
+    
+    i = i+1
+    
+    }
+    
+    break
+    
+  }
+  
+  #if not have them grow
+  
+  N[i] <- N[i-1] + r_norm*N[i-1]*(1-((N[i-1] + M[i-1])/k))
+  M[i] <- M[i-1] + r_norm*M[i-1]*(1-((N[i-1] + M[i-1])/k))
+  
+  #Next iteration
+  i <- i + 1
+  
+}
+
+#plotting the data
+
+par(mfrow = c(1,2))
+
+plot(1:(i-1), main = "Non-Mutated Cells", N, xlab = "Day", ylab = "Non-Mutated Cell Count")
+abline(v = day, lty = 3 )
+plot(1:(i-1), main = "Mutated Cells", M, xlab = "Day", ylab = "Mutated Cell Count")
+abline(v = day, lty = 3 )
